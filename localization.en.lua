@@ -18,6 +18,7 @@ AUTOFLOOD_ERR_RATE  	= "You can't send messages less than every RATE seconds."
  
 AUTOFLOOD_HELP		= {	"===================== Auto Flood =====================",
 				"/flood [on|off] : Start / stops sending the message.",
+				"/floodyell [on|off] : Start / stops sending the yell message.",
 				"/floodmsg <message> : Sets the message.",
 				"/floodchan <channel> : Sets the channel.",
 				"/floodrate <duration> : Sets the period (in seconds).",

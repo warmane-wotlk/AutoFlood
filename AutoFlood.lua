@@ -2,9 +2,11 @@
 
 	 AutoFlood
 
-	 Version : 1.1
+	 Version : 1.1.s1
 	 Date    : 18/11/2006
-	 Author  : Lenwë
+	 Author  : Lenwë, Sunmudang
+
+-- 1.1.s1 : Adding Yell in the half of rate
 
 ]]
 
@@ -15,6 +17,7 @@
 -- AutoFlood_InitVars()
 --
 -- Init conviguration variables
+local bYellOut = false
 
 function AutoFlood_InitVars()
     local configInitialisation = 
@@ -24,6 +27,7 @@ function AutoFlood_InitVars()
         ['channel']   = "1",
         ['rate']      = 60,
         ['idChannel'] = "1",
+        ['yell'] 	  = true,
     }
     
     if AF_config == nil then
@@ -92,9 +96,13 @@ end
 function AutoFlood_OnUpdate(arg1)
 	if(not AF_active) then return end
 	AutoFlood_Frame.TimeSinceLastUpdate = AutoFlood_Frame.TimeSinceLastUpdate + arg1
-	if( AutoFlood_Frame.TimeSinceLastUpdate > AF_config[AF_myID]['rate'] ) then
+	if ( AF_config[AF_myID]['yell'] == true and bYellOut == false and AutoFlood_Frame.TimeSinceLastUpdate > AF_config[AF_myID]['rate'] / 2 ) then
+		SendChatMessage(AF_config[AF_myID]['message'], "YELL", this.language)
+		bYellOut = true
+	elseif( AutoFlood_Frame.TimeSinceLastUpdate > AF_config[AF_myID]['rate'] ) then
      	SendChatMessage(AF_config[AF_myID]['message'], AF_config[AF_myID]['system'], this.language, GetChannelName(AF_config[AF_myID]['idChannel']))
 		AutoFlood_Frame.TimeSinceLastUpdate = 0
+		bYellOut = false
 	end
 end
 
@@ -225,6 +233,13 @@ SlashCmdList["AUTOFLOOD"] = function(s)
 	end
 end
 
+SlashCmdList["AUTOFLOODYELL"] = function(s)
+	if (s == "on") then
+	     AF_config[AF_myID]['yell'] = true
+	else
+	     AF_config[AF_myID]['yell'] = false
+	end
+end
 
 -- /floodmessage <message>
 --
@@ -275,6 +290,8 @@ end
 
 
 SLASH_AUTOFLOOD1           = "/flood"
+
+SLASH_AUTOFLOODYELL1       = "/floodyell"
 
 SLASH_AUTOFLOODSETMESSAGE1 = "/floodmessage"
 SLASH_AUTOFLOODSETMESSAGE2 = "/floodmsg"
